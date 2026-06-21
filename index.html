@@ -274,16 +274,14 @@
     }
   }
 
-  // ★正解判定を甘くしたやさしいモード
+// ★正解判定を甘くしたやさしいモード
   function checkAnswer(spokenText) {
     if (isAnswered) return;
     if (!spokenText) return;
 
-    // 音声の空白などをなくして小文字にする
     let cleanedSpoken = spokenText.toLowerCase().replace(/\s+/g, "");
     let isCorrect = false;
 
-    // 辞書の「match」リスト（カタカナ等）に入っている言葉が含まれていればOK！
     for (let m of currentQuestion.match) {
       let cleanedMatch = m.toLowerCase().replace(/\s+/g, "");
       if (cleanedSpoken.includes(cleanedMatch)) {
@@ -292,7 +290,6 @@
       }
     }
 
-    // 念のため、英語そのままの文字が含まれていてもOK
     let cleanedTarget = currentQuestion.en.toLowerCase().replace(/[^a-z]/g, "");
     if (cleanedSpoken.includes(cleanedTarget)) {
         isCorrect = true;
@@ -311,19 +308,23 @@
         unlocked.push(getIdx);
         localStorage.setItem('unlocked_kaden_eng', JSON.stringify(unlocked));
 
+        // ★ここでアニメーションを追加！
         resultDiv.innerHTML = `🌸 Excellent!! 🌸<br>
-          <div style="font-size:16px; margin-top:10px; background:#fff3cd; padding:10px; border-radius:10px;">
-            ✨ かでんゲット！ ✨<br>
-            <span class="monster-anim" style="font-size:50px;">${kadenList[getIdx].e}</span><br>
-            <strong style="font-size:18px;color:#d35400;">${kadenList[getIdx].n}</strong>
+          <div style="font-size:16px; margin-top:10px; background:#fff3cd; padding:15px; border-radius:15px; border:3px solid #ffc107;">
+            <div class="monster-anim" style="font-size:70px; display:inline-block;">${kadenList[getIdx].e}</div><br>
+            <strong style="font-size:22px;color:#d35400;">${kadenList[getIdx].n}</strong><br>
+            ✨ ゲットだぜ！ ✨
           </div>`;
-        speakJpn(`エクセレント！あたらしいかでん、${kadenList[getIdx].n}をゲットしたよ！`);
+        
+        // ★ここで名前を読み上げた後に「ゲットだぜ！」と言う（最後まで言い切る工夫）
+        speakJpn(`${kadenList[getIdx].n}、ゲットだぜ！`);
       } else {
         resultDiv.innerHTML = "🌸 Excellent!! 🌸";
         speakJpn("エクセレント！かんぺきだよ！");
       }
       
-      setTimeout(setNextQuestion, 2500); 
+      // ★演出をしっかり見せるために3秒（3000ms）待ってから次へ
+      setTimeout(setNextQuestion, 3000); 
     } else {
       resultDiv.innerHTML = "❌ Try again!";
       resultDiv.style.color = "#d32f2f";
