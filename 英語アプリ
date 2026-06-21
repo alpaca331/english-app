@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>えいごアドベンチャー</title>
+  <style>
+    body { text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif; padding: 15px; background-color: #f0f8ff; color: #333; margin: 0; }
+    .container { max-width: 480px; margin: 0 auto; background: white; padding: 25px; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    h2 { color: #0984e3; font-size: 26px; margin-top: 0; }
+    .subtitle { font-size: 16px; color: #7f8c8d; margin-bottom: 20px; }
+    
+    /* TOP画面のボタンデザイン */
+    .btn-mode { font-size: 20px; padding: 15px; margin: 10px 0; width: 100%; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); line-height: 1.4; transition: transform 0.1s; }
+    .btn-mode:active { transform: scale(0.97); }
+    .mode-abc { background-color: #fdcb6e; color: #2d3436; }
+    .mode-animal { background-color: #00b894; }
+    .mode-greeting { background-color: #0984e3; }
+    .mode-zukan { background-color: #d63031; margin-top: 20px; border: 3px solid #ff7675; }
+    .sub-text { font-size: 14px; font-weight: normal; opacity: 0.9; }
+
+    /* ゲーム画面のデザイン */
+    .quiz-box { background: #e8f4f8; padding: 15px; border-radius: 18px; margin-bottom: 20px; border: 3px dashed #74b9ff; }
+    .emoji-graphic { font-size: 60px; margin: 10px 0; }
+    .jp-hint { font-size: 18px; color: #636e72; font-weight: bold; margin-bottom: 5px; }
+    .en-word { font-size: 36px; font-weight: bold; color: #2d3436; letter-spacing: 2px; }
+    
+    input[type="text"] { font-size: 24px; width: 80%; text-align: center; padding: 10px; border: 3px solid #b2bec3; border-radius: 16px; background-color: #fafafa; margin-bottom: 10px; }
+    button.action-btn { font-size: 20px; padding: 14px 28px; margin: 8px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 5px 10px rgba(0,0,0,0.1); color: white; }
+    .btn-mic { background-color: #e84393; width: 80%; }
+    .btn-reset { background-color: #ffeaa7; color: #d35400; font-size: 14px; padding: 8px 16px; margin-top: 15px; box-shadow: none; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+    #result { font-size: 24px; font-weight: bold; margin: 15px 0; min-height: 40px; }
+
+    /* モンスターずかん */
+    .zukan-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; max-height: 450px; overflow-y: auto; padding: 10px; background: #fffcf0; border-radius: 10px; border: 3px dashed #ffcb74; }
+    .zukan-item { font-size: 30px; background: white; border-radius: 8px; padding: 5px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .zukan-item.locked { background: #e0e0e0; color: #aaa; font-size: 20px; line-height: 40px; }
+    .count-text { font-size: 20px; font-weight: bold; color: #e67e22; }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+    .monster-anim { display: inline-block; animation: bounce 1.5s infinite; }
+  </style>
+</head>
+<body>
+
+<div class="container" id="top-screen">
+  <h2>🌎 えいごアドベンチャー </h2>
+  <div class="subtitle">あそぶモードをえらんでね！</div>
+  
+  <button class="btn-mode mode-abc" onclick="startGame('alphabet')">
+    🔤 アルファベット<br><span class="sub-text" style="color:#555;">A から Z まで いえるかな？</span>
+  </button>
+  <button class="btn-mode mode-animal" onclick="startGame('animal')">
+    🦁 どうぶつのなまえ<br><span class="sub-text">えいごで どうぶつを よんでみよう</span>
+  </button>
+  <button class="btn-mode mode-greeting" onclick="startGame('greeting')">
+    👋 かんたんなあいさつ<br><span class="sub-text">ハロー！サンキュー！</span>
+  </button>
+
+  <button class="btn-mode mode-zukan" onclick="showZukan()">
+    📖 モンスターずかんを見る
+  </button>
+</div>
+
+<div class="container" id="game-screen" style="display: none;">
+  <h2>🌎 えいごアドベンチャー </h2>
+  <div class="subtitle" id="game-subtitle">マイクをおして えいごで しゃべろう！</div>
+
+  <div class="quiz-box">
+    <div class="jp-hint" id="q-hint"></div>
+    <div class="emoji-graphic" id="q-emoji"></div>
+    <div class="en-word" id="q-word"></div>
+  </div>
+
+  <div class="input-area" id="interactive-zone">
+    <input type="text" id="answer" placeholder="ききとった えいご" readonly style="background:#eee; color:#555;"><br>
+    <button class="action-btn btn-mic" onclick="startMic()">🎤 えいごで しゃべる</button>
+    <button class="btn-reset" style="background-color: #74b9ff; color: white;" onclick="playExample()">🔊 おてほんを きく</button>
+  </div>
+
+  <div id="result"></div>
+  
+  <button class="btn-reset" onclick="goBackToTop()">🏠 モードをえらびなおす</button>
+</div>
+
+<div class="container" id="zukan-screen" style="display: none;">
+  <h2>📖 モンスターずかん</h2>
+  <div class="count-text">あつめた数: <span id="zukan-count">0</span> / 100</div>
+  
+  <div class="zukan-grid" id="zukan-grid"></div>
+
+  <button class="btn-reset" style="font-size: 16px; padding: 12px 24px; margin-top: 20px;" onclick="goBackToTop()">🏠 トップにもどる</button>
+</div>
+
+<script>
+  // 100種類のモンスターリスト（算数アプリと同じ）
+  const monsterList = "👾,👽,👻,👹,👺,🤖,🎃,😺,😸,😹,😻,😼,😽,🙀,😿,😾,🙈,🙉,🙊,🐵,🐒,🦍,🦧,🐶,🐕,🦮,🐩,🐺,🦊,🦝,🐱,🐈,🦁,🐯,🐅,🐆,🐴,🐎,🦄,🦓,🦌,🦬,🐮,🐂,🐃,🐄,🐷,🐖,🐗,🐽,🐏,🐑,🐐,🐪,🐫,🦙,🦒,🐘,🦣,🦏,🦛,🐭,🐁,🐀,🐹,🐰,🐇,🐿,🦫,🦔,🦇,🐻,🐨,🐼,🦥,🦦,🦨,🦘,🦡,🦃,🐔,🐓,🐣,🐤,🐥,🐦,🐧,🕊,🦅,🦆,🦢,🦉,🦤,🦩,🦚,🦜,🐸,🐊,🐢,🦎,🐍".split(",");
+
+  // 問題データ
+  const dicAlphabet = [
+    {en: "A", jp: "エー", emoji: "🍎"}, {en: "B", jp: "ビー", emoji: "🐻"}, {en: "C", jp: "シー", emoji: "🚗"},
+    {en: "D", jp: "ディー", emoji: "🐶"}, {en: "E", jp: "イー", emoji: "🐘"}, {en: "F", jp: "エフ", emoji: "🐸"},
+    {en: "G", jp: "ジー", emoji: "🦒"}, {en: "H", jp: "エイチ", emoji: "🚁"}, {en: "I", jp: "アイ", emoji: "🍨"},
+    {en: "J", jp: "ジェイ", emoji: "🧃"}, {en: "K", jp: "ケイ", emoji: "🐨"}, {en: "L", jp: "エル", emoji: "🦁"},
+    {en: "M", jp: "エム", emoji: "🐵"}, {en: "N", jp: "エヌ", emoji: "📓"}, {en: "O", jp: "オー", emoji: "🐙"},
+    {en: "P", jp: "ピー", emoji: "🐷"}, {en: "Q", jp: "キュー", emoji: "👑"}, {en: "R", jp: "アール", emoji: "🐇"},
+    {en: "S", jp: "エス", emoji: "🐍"}, {en: "T", jp: "ティー", emoji: "🐯"}, {en: "U", jp: "ユー", emoji: "☂️"},
+    {en: "V", jp: "ブイ", emoji: "🎻"}, {en: "W", jp: "ダブリュー", emoji: "🍉"}, {en: "X", jp: "エックス", emoji: "✖️"},
+    {en: "Y", jp: "ワイ", emoji: "🛥️"}, {en: "Z", jp: "ゼット", emoji: "🦓"}
+  ];
+
+  const dicAnimal = [
+    {en: "Dog", jp: "いぬ", emoji: "🐶"}, {en: "Cat", jp: "ねこ", emoji: "🐱"},
+    {en: "Lion", jp: "ライオン", emoji: "🦁"}, {en: "Elephant", jp: "ぞう", emoji: "🐘"},
+    {en: "Monkey", jp: "さる", emoji: "🐵"}, {en: "Bear", jp: "くま", emoji: "🐻"},
+    {en: "Pig", jp: "ぶた", emoji: "🐷"}, {en: "Cow", jp: "うし", emoji: "🐮"},
+    {en: "Tiger", jp: "とら", emoji: "🐯"}, {en: "Rabbit", jp: "うさぎ", emoji: "🐰"}
+  ];
+
+  const dicGreeting = [
+    {en: "Hello", jp: "こんにちは", emoji: "👋"},
+    {en: "Good morning", jp: "おはよう", emoji: "🌅"},
+    {en: "Good night", jp: "おやすみ", emoji: "🌃"},
+    {en: "Thank you", jp: "ありがとう", emoji: "🎁"},
+    {en: "Sorry", jp: "ごめんなさい", emoji: "💦"},
+    {en: "Goodbye", jp: "さようなら", emoji: "🏃"},
+    {en: "Yes", jp: "はい", emoji: "⭕"},
+    {en: "No", jp: "いいえ", emoji: "❌"}
+  ];
+
+  let currentModeList = [];
+  let currentQuestion = null;
+  let isAnswered = false;
+
+  window.onload = function() {
+    document.getElementById('top-screen').style.display = 'block';
+  };
+
+  function startGame(mode) {
+    document.getElementById('top-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'block';
+    
+    if (mode === 'alphabet') { currentModeList = dicAlphabet; }
+    else if (mode === 'animal') { currentModeList = dicAnimal; }
+    else if (mode === 'greeting') { currentModeList = dicGreeting; }
+    
+    setNextQuestion();
+  }
+
+  function goBackToTop() {
+    document.getElementById('game-screen').style.display = 'none';
+    document.getElementById('zukan-screen').style.display = 'none';
+    document.getElementById('top-screen').style.display = 'block';
+  }
+
+  function showZukan() {
+    document.getElementById('top-screen').style.display = 'none';
+    document.getElementById('zukan-screen').style.display = 'block';
+    let unlocked = JSON.parse(localStorage.getItem('unlocked_monsters_eng') || '[]');
+    document.getElementById('zukan-count').innerText = unlocked.length;
+    let gridHtml = '';
+    for(let i=0; i<100; i++) {
+      gridHtml += unlocked.includes(i) ? `<div class="zukan-item">${monsterList[i]}</div>` : `<div class="zukan-item locked">❓</div>`;
+    }
+    document.getElementById('zukan-grid').innerHTML = gridHtml;
+  }
+
+  function setNextQuestion() {
+    isAnswered = false;
+    // ランダムに出題
+    let randIdx = Math.floor(Math.random() * currentModeList.length);
+    currentQuestion = currentModeList[randIdx];
+    
+    document.getElementById('q-hint').innerText = currentQuestion.jp;
+    document.getElementById('q-emoji').innerText = currentQuestion.emoji;
+    document.getElementById('q-word').innerText = currentQuestion.en;
+    document.getElementById('answer').value = "";
+    document.getElementById('result').innerHTML = "";
+    
+    // 問題が変わったら自動でお手本を言う
+    playExample();
+  }
+
+  function playExample() {
+    speakEng(currentQuestion.en);
+  }
+
+  // 英語での音声読み上げ（お手本用）
+  function speakEng(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US'; // 英語で発音！
+      msg.rate = 0.9;     // 少しゆっくり
+      window.speechSynthesis.speak(msg);
+    }
+  }
+  
+  // 日本語での音声読み上げ（正解した時のほめ言葉用）
+  function speakJpn(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'ja-JP';
+      msg.rate = 1.1;
+      window.speechSynthesis.speak(msg);
+    }
+  }
+
+  // 答え合わせ
+  function checkAnswer(spokenText) {
+    if (isAnswered) return;
+    if (!spokenText) return;
+
+    // 判定を甘くするため、大文字小文字を揃えて、ピリオドなどの記号を消す処理
+    let cleanedSpoken = spokenText.toLowerCase().replace(/[^a-z]/g, "");
+    let cleanedTarget = currentQuestion.en.toLowerCase().replace(/[^a-z]/g, "");
+
+    let resultDiv = document.getElementById('result');
+    
+    if (cleanedSpoken === cleanedTarget) {
+      isAnswered = true;
+      
+      // モンスター図鑑（英語用キーで保存）
+      let unlocked = JSON.parse(localStorage.getItem('unlocked_monsters_eng') || '[]');
+      if (unlocked.length < 100) {
+        let available = [];
+        for(let i=0; i<100; i++) { if(!unlocked.includes(i)) available.push(i); }
+        let getIdx = available[Math.floor(Math.random() * available.length)];
+        unlocked.push(getIdx);
+        localStorage.setItem('unlocked_monsters_eng', JSON.stringify(unlocked));
+
+        resultDiv.innerHTML = `🌸 Excellent!! 🌸<br>
+          <div style="font-size:16px; margin-top:10px; background:#fff3cd; padding:10px; border-radius:10px;">
+            ✨ モンスターゲット！ ✨<br>
+            <span class="monster-anim" style="font-size:50px;">${monsterList[getIdx]}</span>
+          </div>`;
+        speakJpn("エクセレント！あたらしいモンスターをゲットしたよ！");
+      } else {
+        resultDiv.innerHTML = "🌸 Excellent!! 🌸";
+        speakJpn("エクセレント！かんぺきだよ！");
+      }
+      
+      setTimeout(setNextQuestion, 2500); 
+    } else {
+      resultDiv.innerHTML = "❌ Try again!";
+      resultDiv.style.color = "#d32f2f";
+      speakJpn("おしい！もういっかい、おてほんをきいて言ってみよう！");
+    }
+  }
+
+  // マイク認識（英語モード）
+  function startMic() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("お使いの端末はマイク認識に対応していません💦"); return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US'; // 認識も英語にセット！
+    recognition.start();
+
+    document.getElementById('result').innerHTML = "🎤 Listening...";
+    document.getElementById('result').style.color = "#e84393";
+
+    recognition.onresult = function(event) {
+      const spokenText = event.results[0][0].transcript;
+      document.getElementById('answer').value = spokenText;
+      checkAnswer(spokenText);
+    };
+    recognition.onerror = function() {
+      document.getElementById('result').innerHTML = "うまくききとれなかったよ！";
+      document.getElementById('result').style.color = "#7f8c8d";
+    };
+  }
+</script>
+
+</body>
+</html>
