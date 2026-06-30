@@ -1,174 +1,271 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <title>えいごアドベンチャー</title>
-  <style>
-    body { text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif; padding: 15px; background-color: #f0f8ff; color: #333; margin: 0; }
-    .container { max-width: 480px; margin: 0 auto; background: white; padding: 25px; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-    h2 { color: #0984e3; font-size: 26px; margin-top: 0; }
-    .btn-mode { font-size: 18px; padding: 12px; margin: 8px 0; width: 100%; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; color: white; }
-    .quiz-box { background: #e8f4f8; padding: 15px; border-radius: 18px; margin-bottom: 20px; border: 3px dashed #74b9ff; }
-    .emoji-graphic { font-size: 60px; margin: 10px 0; }
-    input[type="text"] { font-size: 30px; width: 80%; text-align: center; padding: 10px; border: 3px solid #b2bec3; border-radius: 16px; margin-bottom: 10px; }
-    .action-btn { font-size: 20px; padding: 12px 25px; margin: 6px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; color: white; }
-    .btn-mic { background-color: #3498db; }
-    .btn-stop { background-color: #e74c3c; }
-    .btn-reset { background-color: #ffeaa7; color: #d35400; font-size: 13px; padding: 8px 16px; margin-top: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-    #result { font-size: 24px; font-weight: bold; margin: 15px 0; min-height: 40px; }
-    .zukan-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; padding: 10px; background: #fffcf0; border-radius: 10px; border: 3px dashed #ffcb74; }
-    .zukan-item { background: white; border-radius: 8px; padding: 5px; text-align: center; font-size: 10px; }
-    .monster-anim { display: inline-block; animation: bounce 1.5s infinite; }
-    @keyframes bounce { 0%, 100%{transform:translateY(0)} 40%{transform:translateY(-20px)} }
-  </style>
-</head>
-<body>
-
-<div class="container" id="top-screen">
-  <h2>🌎 えいごアドベンチャー</h2>
-  <button class="btn-mode" style="background:#fdcb6e;color:#333;" onclick="startGame('alphabet')">🔤 アルファベット</button>
-  <button class="btn-mode" style="background:#00b894;" onclick="startGame('animal')">🦁 どうぶつ</button>
-  <button class="btn-mode" style="background:#0984e3;" onclick="startGame('greeting')">👋 あいさつ</button>
-  <button class="btn-mode" style="background:#e84393;" onclick="startGame('food')">🍎 たべもの</button>
-  <button class="btn-mode" style="background:#6c5ce7;" onclick="startGame('color')">🎨 いろ</button>
-  <button class="btn-mode" style="background:#d63031;" onclick="startGame('number')">🔢 すうじ</button>
-  <button class="btn-mode" style="background:#f1c40f;color:#333;" onclick="showZukan()">📖 か電ずかん</button>
+<!DOCTYPE html> <html> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <meta name="robots" content="noindex"> <title>えいごアドベンチャー</title> <style> body { text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif; padding: 15px; background-color: #f0f8ff; color: #333; margin: 0; } .container { max-width: 480px; margin: 0 auto; background: white; padding: 25px; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); } h2 { color: #0984e3; font-size: 26px; margin-top: 0; } .btn-mode { font-size: 18px; padding: 12px; margin: 8px 0; width: 100%; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; color: white; } .quiz-box { background: #e8f4f8; padding: 15px; border-radius: 18px; margin-bottom: 20px; border: 3px dashed #74b9ff; } .emoji-graphic { font-size: 60px; margin: 10px 0; } input[type="text"] { font-size: 30px; width: 80%; text-align: center; padding: 10px; border: 3px solid #b2bec3; border-radius: 16px; margin-bottom: 10px; } .action-btn { font-size: 20px; padding: 12px 25px; margin: 6px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; color: white; } .btn-mic { background-color: #3498db; } .btn-stop { background-color: #e74c3c; } .btn-reset { background-color: #ffeaa7; color: #d35400; font-size: 13px; padding: 8px 16px; margin-top: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; } #result { font-size: 24px; font-weight: bold; margin: 15px 0; min-height: 40px; } .zukan-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; padding: 10px; background: #fffcf0; border-radius: 10px; border: 3px dashed #ffcb74; } .zukan-item { background: white; border-radius: 8px; padding: 5px; text-align: center; font-size: 10px; } .monster-anim { display: inline-block; animation: bounce 1.5s infinite; } @keyframes bounce { 0%, 100%{transform:translateY(0)} 40%{transform:translateY(-20px)} } </style> </head> <body> <div class="container" id="top-screen"> <h2>🌎 えいごアドベンチャー</h2> <button class="btn-mode" style="background:#fdcb6e;color:#333;" onclick="startGame('alphabet')">🔤 アルファベット</button> <button class="btn-mode" style="background:#00b894;" onclick="startGame('animal')">🦁 どうぶつ</button> <button class="btn-mode" style="background:#0984e3;" onclick="startGame('greeting')">👋 あいさつ</button> <button class="btn-mode" style="background:#e84393;" onclick="startGame('food')">🍎 たべもの</button> <button class="btn-mode" style="background:#6c5ce7;" onclick="startGame('color')">🎨 いろ</button> <button class="btn-mode" style="background:#d63031;" onclick="startGame('number')">🔢 すうじ</button>
+<button class="btn-mode" style="background:#8e44ad;" onclick="startGame('music')">🎵 おんがくアーティスト</button>
+<button class="btn-mode" style="background:#f1c40f;color:#333;" onclick="showZukan()">📖 か電ずかん</button> </div> <div class="container" id="game-screen" style="display: none;"> <div class="quiz-box"> <div class="emoji-graphic" id="q-emoji"></div>
+<div id="q-word" style="font-size:24px; font-weight:bold;"></div>
+<div style="font-size:13px; color:#636e72; margin-top:8px;">英語でも、日本語っぽい発音でも OK！</div>
 </div>
+<input type="text" id="answer" placeholder="答えを入力" onkeydown="if(event.key==='Enter') checkAnswer()"> <br> <button class="action-btn" style="background:#2ecc71;" onclick="checkAnswer()">👆 こたえる</button> <button class="action-btn btn-mic" id="btn-mic-auto" onclick="toggleAutoMic()">▶️ ずっと声でこたえる</button> <div id="result"></div> <button class="btn-reset" onclick="goBackToTop()">🏠 トップに戻る</button> </div> <div class="container" id="zukan-screen" style="display: none;"> <h2>📖 か電ずかん</h2> <div id="zukan-count"></div> <div class="zukan-grid" id="zukan-grid"></div> <button class="btn-reset" onclick="goBackToTop()">🏠 戻る</button> </div> <script>
+// 算数アプリと同じ200種類のデータ
+const kadenList = [ {n:"るーむえあこん",e:"❄️"},{n:"えきしょうてれび",e:"📺"},{n:"どらむしきせんたくき",e:"🌀"},{n:"れいぞうこ",e:"🧊"},{n:"でんじれんじ",e:"⚡"}, {n:"すいはんき",e:"🍚"},{n:"そうじき",e:"🧹"},{n:"くうきせいじょうき",e:"🍃"},{n:"せんぷうき",e:"💨"},{n:"どらいやー",e:"💨"}, {n:"のーとぱそこん",e:"💻"},{n:"すまーとほん",e:"📱"},{n:"たぶれっと",e:"📲"},{n:"すまーとうぉっち",e:"⌚"},{n:"げーむき",e:"🎮"}, {n:"おーぶんとおすたー",e:"🍞"},{n:"でんきけとる",e:"🫖"},{n:"こーひーめーかー",e:"☕"},{n:"しょっきあらいき",e:"🍽️"},{n:"ほっとぷれーと",e:"🍳"}, {n:"じどうはんばいき",e:"🥤"},{n:"れいとうしょーけーす",e:"🥶"},{n:"すまーとすぴーかー",e:"🔊"},{n:"ろぼっとそうじき",e:"🤖"},{n:"でんきはぶらし",e:"🪥"}, {n:"びでおかめら",e:"📹"},{n:"でじたるかめら",e:"📷"},{n:"ぷろじぇくたー",e:"📽️"},{n:"ぷりんたー",e:"🖨️"},{n:"へっどほん",e:"🎧"}, {n:"わいやれすいやほん",e:"🎧"},{n:"らじお",e:"📻"},{n:"でんきもうふ",e:"🛏️"},{n:"こたつ",e:"🪵"},{n:"でんきすとーぶ",e:"🔥"}, {n:"かしつき",e:"💧"},{n:"じょしつき",e:"🌬️"},{n:"みきさー",e:"🍹"},{n:"わっふるめーかー",e:"🧇"},{n:"ぽっぷこーんましん",e:"🍿"}, {n:"かきごおりき",e:"🍧"},{n:"でんきあつりょくなべ",e:"🍲"},{n:"ほーむべーかりー",e:"🍞"},{n:"わいんせらー",e:"🍾"},{n:"すもーくましん",e:"💨"}, {n:"しーりんぐらいと",e:"💡"},{n:"かいちゅうでんとう",e:"🔦"},{n:"いるみねーしょん",e:"✨"},{n:"ですくらいと",e:"💡"},{n:"そーらーぱねる",e:"☀️"}, {n:"じゅうでんき",e:"🔌"},{n:"もばいるばってりー",e:"🔋"},{n:"じどうどあ",e:"🚪"},{n:"えすかれーたー",e:"🪜"},{n:"えれべーたー",e:"🛗"}, {n:"じどうかいさつき",e:"🎫"},{n:"れいぞうとらっく",e:"🚚"},{n:"でんきじどうしゃ",e:"🚗"},{n:"はいぶりっどかー",e:"🚘"},{n:"でんきばいく",e:"🏍️"}, {n:"でんきじてんしゃ",e:"🚲"},{n:"どろーん",e:"🛸"},{n:"らじこんかー",e:"🏎️"},{n:"でんきぷられーる",e:"🚂"},{n:"がちゃがちゃましん",e:"🪙"}, {n:"すまーときー",e:"🔑"},{n:"じどうきゅうゆき",e:"⛽"},{n:"でんきどりる",e:"🔧"},{n:"でんきはんまー",e:"🔨"},{n:"でんきちぇーんそー",e:"🪓"}, {n:"はんだごて",e:"🔥"},{n:"でんきようせつき",e:"⚡"},{n:"3Dぷりんたー",e:"🖨️"},{n:"れーざーかったー",e:"⚡"},{n:"ぼうはんかめら",e:"📷"}, {n:"てんもんぼうえんきょう",e:"🔭"},{n:"でんぱあんてな",e:"📡"},{n:"すまーとめーたー",e:"⏱️"},{n:"でんきばいおりん",e:"🎻"},{n:"えれきぎたー",e:"🎸"}, {n:"でんしぴあの",e:"🎹"},{n:"でんしどらむ",e:"🥁"},{n:"しんせさいざー",e:"🎹"},{n:"DJみきさー",e:"🎛️"},{n:"うーはーすぴーかー",e:"🔊"}, {n:"めがほん",e:"📢"},{n:"ぼいすちぇんじゃー",e:"🎙️"},{n:"からおけましん",e:"🎤"},{n:"すろっとましん",e:"🎰"},{n:"くれーんげーむ",e:"🕹️"}, {n:"どあほん",e:"🔔"},{n:"おんすいせんじょうべんざ",e:"🚽"},{n:"でんきおんすいき",e:"♨️"},{n:"IHくっきんぐひーたー",e:"🍳"},{n:"ふーどぷろせっさー",e:"🧄"}, {n:"なまごみしょりき",e:"🗑️"},{n:"ふとんかんそうき",e:"🛏️"},{n:"ずぼんぷれっさー",e:"👖"},{n:"あしおんき",e:"🧦"},{n:"でんきあんか",e:"🔥"}, {n:"しゅれっだー",e:"📄"},{n:"たいむれこーだー",e:"⏱️"},{n:"でんきえんぴつけずり",e:"✏️"},{n:"らみねーたー",e:"📄"},{n:"でんたく",e:"🧮"}, {n:"ばーこーどりーだー",e:"🔍"},{n:"れじすたー",e:"💰"},{n:"こぴーき",e:"🖨️"},{n:"すきゃなー",e:"📄"},{n:"3Dすきゃなー",e:"🔍"}, {n:"でんきしぇーばー",e:"🪒"},{n:"はなげかったー",e:"✂️"},{n:"びがんき",e:"✨"},{n:"ひかりびようき",e:"⚡"},{n:"まっさーじちぇあ",e:"💺"}, {n:"ふっとまっさーじゃー",e:"🦶"},{n:"ていしゅうはちりょうき",e:"⚡"},{n:"でんきべっど",e:"🛏️"},{n:"らいとつきみらー",e:"🪞"},{n:"へああいろん",e:"💇"}, {n:"でんきぽっと",e:"🫖"},{n:"びーるさーばー",e:"🍺"},{n:"うぉーたーさーばー",e:"💧"},{n:"ちょこれーとふぁうんてん",e:"🍫"},{n:"わたあめましん",e:"☁️"}, {n:"くれーぷめーかー",e:"🍳"},{n:"あいすくりーむめーかー",e:"🍨"},{n:"よーぐるとめーかー",e:"🥛"},{n:"でんきふらいやー",e:"🍤"},{n:"すちーむくっかー",e:"💨"}, {n:"ほっとさんどめーかー",e:"🥪"},{n:"ふぃっしゅろーすたー",e:"🐟"},{n:"でんきぐりるなべ",e:"🍲"},{n:"ほおんじゃー",e:"🍚"},{n:"れいおんこ",e:"📦"}, {n:"そーだましん",e:"🥤"},{n:"すろーじゅーさー",e:"🍹"},{n:"はんどみきさー",e:"🥚"},{n:"じどうちょうりなべ",e:"🍲"},{n:"ふっとばす",e:"🦶"}, {n:"でんきみしん",e:"🧵"},{n:"けだまとりき",e:"👕"},{n:"くつかんそうき",e:"👟"},{n:"ちょうおんぱせんじょうき",e:"👓"},{n:"でんきどらいばー",e:"🔧"}, {n:"でんきさんだー",e:"🔧"},{n:"でんきじぐそー",e:"🪓"},{n:"こうあつせんじょうき",e:"🚿"},{n:"しばかりき",e:"🌱"},{n:"ぶろわー",e:"💨"}, {n:"でんきくさかりき",e:"🌱"},{n:"おいるひーたー",e:"🔥"},{n:"ぱねるひーたー",e:"🔥"},{n:"せらみっくふぁんひーたー",e:"🔥"},{n:"がすふぁんひーたー",e:"🔥"}, {n:"せきゆすとーぶ",e:"🔥"},{n:"れいふうせん",e:"💨"},{n:"すぽっとくーらー",e:"❄️"},{n:"じょしつかんそうき",e:"💨"},{n:"だつしゅうき",e:"🍃"}, {n:"だつしゅうはんがー",e:"👔"},{n:"あいろん",e:"💨"},{n:"いるいすちーまー",e:"💨"},{n:"はんでぃくりーなー",e:"🧹"},{n:"すてぃっくくりーなー",e:"🧹"}, {n:"ふとんくりーなー",e:"🛏️"},{n:"みずぶきろぼっと",e:"🤖"},{n:"まどふきろぼっと",e:"🤖"},{n:"でんどうぱとかー",e:"🚓"},{n:"せんさーらいと",e:"💡"}, {n:"じどうきゅうじき",e:"🍖"},{n:"じどうきゅうすいき",e:"💧"},{n:"でんききっくぼーど",e:"🛴"},{n:"しにあかー",e:"🚗"},{n:"でんきくるまいす",e:"💺"}, {n:"せぐうえい",e:"🛴"},{n:"ほばーぼーど",e:"🛹"},{n:"かんでんちじゅうでんき",e:"🔋"},{n:"ぽーたぶるでんげん",e:"🔋"},{n:"とうこうき",e:"💡"}, {n:"でんきえあぽんぷ",e:"💨"},{n:"どらいぶれこーだー",e:"📷"},{n:"かーなび",e:"🗺️"},{n:"しゃさいれいぞうこ",e:"🧊"},{n:"ちょうおんぱかしつき",e:"💧"}, {n:"あろまでぃふゅーざー",e:"🍃"},{n:"すまーとちぇあ",e:"💺"},{n:"でんどうのこぎり",e:"🪓"},{n:"たいようこうぱねる",e:"☀️"},{n:"でんきなべ",e:"🍲"},{n:"すまーとりんぐ",e:"💍"}, {n:"わいやれすじゅうでんき",e:"🔌"},{n:"でんどうねじまわし",e:"🔧"},{n:"でんしじしょ",e:"📕"},{n:"たいじゅうけい",e:"⚖️"},{n:"でんしこくばん",e:"📋"}, {n:"でんどうしゃったー",e:"🚪"},{n:"でんどうるーばー",e:"🪟"},{n:"じどうかんきせん",e:"💨"},{n:"でんどうぶらいんど",e:"🪟"},{n:"すまーとろっく",e:"🔑"}, {n:"じどうみずやりき",e:"🚿"},{n:"でんきさく",e:"⚡"},{n:"でんどうぽんぷ",e:"💨"},{n:"でんきおんしつ",e:"🏠"},{n:"じどうそーたー",e:"⚙️"}, {n:"でんきろ",e:"🔥"},{n:"れーざーすきゃなー",e:"🔍"},{n:"でんどうりふたー",e:"🏗️"},{n:"じどうこんべあ",e:"⛓️"},{n:"でんしはかり",e:"⚖️"}, {n:"でじたるのぎす",e:"📏"},{n:"でんどうぐらいんだー",e:"🔧"},{n:"でんどうぽりっしゃー",e:"🔧"},{n:"すまーとふぁん",e:"💨"} ]; const modes = {
+  alphabet: [
+    {en:"A", emoji:"🔤", match:["a","えー","エー","えい"]},
+    {en:"B", emoji:"🔤", match:["b","びー","ビー","びい"]}
+  ],
+  animal: [
+    {en:"Dog", emoji:"🐶", match:["dog","どっぐ","ドッグ","どぐ","いぬ","犬","わんわん"]},
+    {en:"Cat", emoji:"🐱", match:["cat","きゃっと","キャット","きゃと","ねこ","猫","にゃー"]}
+  ],
+  greeting: [
+    {en:"Hello", emoji:"👋", match:["hello","はろー","ハロー","はろ","こんにちは"]},
+    {en:"Bye", emoji:"👋", match:["bye","ばい","バイ","ばいばい","バイバイ","さようなら"]}
+  ],
+  food: [
+    {en:"Apple", emoji:"🍎", match:["apple","あっぷる","アップル","りんご","リンゴ"]},
+    {en:"Pizza", emoji:"🍕", match:["pizza","ぴざ","ピザ"]}
+  ],
+  color: [
+    {en:"Red", emoji:"🔴", match:["red","れっど","レッド","あか","赤"]},
+    {en:"Blue", emoji:"🔵", match:["blue","ぶるー","ブルー","あお","青"]}
+  ],
+  number: [
+    {en:"One", emoji:"1️⃣", match:["one","わん","ワン","いち","1"]},
+    {en:"Two", emoji:"2️⃣", match:["two","つー","ツー","に","2"]}
+  ],
+  music: [
+    {en:"Ado", emoji:"🎤", voice:"アド", lang:"ja-JP", match:["ado","あど","アド","あどー","アドー"]},
+    {en:"YOASOBI", emoji:"🌙", voice:"ヨアソビ", lang:"ja-JP", match:["yoasobi","よあそび","ヨアソビ","夜遊び"]},
+    {en:"Mrs. GREEN APPLE", emoji:"🍏", voice:"ミセスグリーンアップル", lang:"ja-JP", match:["mrsgreenapple","みせすぐりーんあっぷる","ミセスグリーンアップル","ミセス","Mrs GREEN APPLE"]},
+    {en:"BTS", emoji:"💜", voice:"BTS", lang:"en-US", match:["bts","びーてぃーえす","ビーティーエス","防弾少年団"]},
+    {en:"Taylor Swift", emoji:"🎸", voice:"Taylor Swift", lang:"en-US", match:["taylorswift","ていらーすうぃふと","テイラースウィフト","ていらー","テイラー"]},
+    {en:"Bruno Mars", emoji:"🕺", voice:"Bruno Mars", lang:"en-US", match:["brunomars","ぶるーのまーず","ブルーノマーズ","ぶるーの","ブルーノ"]},
+    {en:"Ariana Grande", emoji:"🎙️", voice:"Ariana Grande", lang:"en-US", match:["arianagrande","ありあなぐらんで","アリアナグランデ","ありあな","アリアナ"]},
+    {en:"Ed Sheeran", emoji:"🎶", voice:"Ed Sheeran", lang:"en-US", match:["edsheeran","えどしーらん","エドシーラン","えど","エド"]}
+  ]
+};
 
-<div class="container" id="game-screen" style="display: none;">
-  <div class="quiz-box">
-    <div class="emoji-graphic" id="q-emoji"></div>
-    <div id="q-word" style="font-size:24px; font-weight:bold;"></div>
-  </div>
-  <input type="text" id="answer" placeholder="答えを入力">
-  <br>
-  <button class="action-btn" style="background:#2ecc71;" onclick="checkAnswer()">👆 こたえる</button>
-  <button class="action-btn btn-mic" id="btn-mic-auto" onclick="toggleAutoMic()">▶️ ずっと声でこたえる</button>
-  <div id="result"></div>
-  <button class="btn-reset" onclick="goBackToTop()">🏠 トップに戻る</button>
-</div>
+let currentMode = "";
+let currentQuestion = {};
+let isAutoMic = false;
+let isSpeaking = false;
+let currentRecognition = null;
 
-<div class="container" id="zukan-screen" style="display: none;">
-  <h2>📖 か電ずかん</h2>
-  <div id="zukan-count"></div>
-  <div class="zukan-grid" id="zukan-grid"></div>
-  <button class="btn-reset" onclick="goBackToTop()">🏠 戻る</button>
-</div>
+/* 子どもの発音・音声認識の表記ゆれを、できるだけゆるく判定する */
+function normalizeAnswer(value) {
+  return (value || "")
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[ァ-ヶ]/g, char => String.fromCharCode(char.charCodeAt(0) - 0x60))
+    .replace(/[ー−－\-\s・.,!?！？'"’]/g, "")
+    .replace(/[^a-z0-9ぁ-ゖ一-龠]/g, "");
+}
 
-<script>
-  // 算数アプリと同じ200種類のデータ
-  const kadenList = [
-    {n:"るーむえあこん",e:"❄️"},{n:"えきしょうてれび",e:"📺"},{n:"どらむしきせんたくき",e:"🌀"},{n:"れいぞうこ",e:"🧊"},{n:"でんじれんじ",e:"⚡"},
-    {n:"すいはんき",e:"🍚"},{n:"そうじき",e:"🧹"},{n:"くうきせいじょうき",e:"🍃"},{n:"せんぷうき",e:"💨"},{n:"どらいやー",e:"💨"},
-    {n:"のーとぱそこん",e:"💻"},{n:"すまーとほん",e:"📱"},{n:"たぶれっと",e:"📲"},{n:"すまーとうぉっち",e:"⌚"},{n:"げーむき",e:"🎮"},
-    {n:"おーぶんとおすたー",e:"🍞"},{n:"でんきけとる",e:"🫖"},{n:"こーひーめーかー",e:"☕"},{n:"しょっきあらいき",e:"🍽️"},{n:"ほっとぷれーと",e:"🍳"},
-    {n:"じどうはんばいき",e:"🥤"},{n:"れいとうしょーけーす",e:"🥶"},{n:"すまーとすぴーかー",e:"🔊"},{n:"ろぼっとそうじき",e:"🤖"},{n:"でんきはぶらし",e:"🪥"},
-    {n:"びでおかめら",e:"📹"},{n:"でじたるかめら",e:"📷"},{n:"ぷろじぇくたー",e:"📽️"},{n:"ぷりんたー",e:"🖨️"},{n:"へっどほん",e:"🎧"},
-    {n:"わいやれすいやほん",e:"🎧"},{n:"らじお",e:"📻"},{n:"でんきもうふ",e:"🛏️"},{n:"こたつ",e:"🪵"},{n:"でんきすとーぶ",e:"🔥"},
-    {n:"かしつき",e:"💧"},{n:"じょしつき",e:"🌬️"},{n:"みきさー",e:"🍹"},{n:"わっふるめーかー",e:"🧇"},{n:"ぽっぷこーんましん",e:"🍿"},
-    {n:"かきごおりき",e:"🍧"},{n:"でんきあつりょくなべ",e:"🍲"},{n:"ほーむべーかりー",e:"🍞"},{n:"わいんせらー",e:"🍾"},{n:"すもーくましん",e:"💨"},
-    {n:"しーりんぐらいと",e:"💡"},{n:"かいちゅうでんとう",e:"🔦"},{n:"いるみねーしょん",e:"✨"},{n:"ですくらいと",e:"💡"},{n:"そーらーぱねる",e:"☀️"},
-    {n:"じゅうでんき",e:"🔌"},{n:"もばいるばってりー",e:"🔋"},{n:"じどうどあ",e:"🚪"},{n:"えすかれーたー",e:"🪜"},{n:"えれべーたー",e:"🛗"},
-    {n:"じどうかいさつき",e:"🎫"},{n:"れいぞうとらっく",e:"🚚"},{n:"でんきじどうしゃ",e:"🚗"},{n:"はいぶりっどかー",e:"🚘"},{n:"でんきばいく",e:"🏍️"},
-    {n:"でんきじてんしゃ",e:"🚲"},{n:"どろーん",e:"🛸"},{n:"らじこんかー",e:"🏎️"},{n:"でんきぷられーる",e:"🚂"},{n:"がちゃがちゃましん",e:"🪙"},
-    {n:"すまーときー",e:"🔑"},{n:"じどうきゅうゆき",e:"⛽"},{n:"でんきどりる",e:"🔧"},{n:"でんきはんまー",e:"🔨"},{n:"でんきちぇーんそー",e:"🪓"},
-    {n:"はんだごて",e:"🔥"},{n:"でんきようせつき",e:"⚡"},{n:"3Dぷりんたー",e:"🖨️"},{n:"れーざーかったー",e:"⚡"},{n:"ぼうはんかめら",e:"📷"},
-    {n:"てんもんぼうえんきょう",e:"🔭"},{n:"でんぱあんてな",e:"📡"},{n:"すまーとめーたー",e:"⏱️"},{n:"でんきばいおりん",e:"🎻"},{n:"えれきぎたー",e:"🎸"},
-    {n:"でんしぴあの",e:"🎹"},{n:"でんしどらむ",e:"🥁"},{n:"しんせさいざー",e:"🎹"},{n:"DJみきさー",e:"🎛️"},{n:"うーはーすぴーかー",e:"🔊"},
-    {n:"めがほん",e:"📢"},{n:"ぼいすちぇんじゃー",e:"🎙️"},{n:"からおけましん",e:"🎤"},{n:"すろっとましん",e:"🎰"},{n:"くれーんげーむ",e:"🕹️"},
-    {n:"どあほん",e:"🔔"},{n:"おんすいせんじょうべんざ",e:"🚽"},{n:"でんきおんすいき",e:"♨️"},{n:"IHくっきんぐひーたー",e:"🍳"},{n:"ふーどぷろせっさー",e:"🧄"},
-    {n:"なまごみしょりき",e:"🗑️"},{n:"ふとんかんそうき",e:"🛏️"},{n:"ずぼんぷれっさー",e:"👖"},{n:"あしおんき",e:"🧦"},{n:"でんきあんか",e:"🔥"},
-    {n:"しゅれっだー",e:"📄"},{n:"たいむれこーだー",e:"⏱️"},{n:"でんきえんぴつけずり",e:"✏️"},{n:"らみねーたー",e:"📄"},{n:"でんたく",e:"🧮"},
-    {n:"ばーこーどりーだー",e:"🔍"},{n:"れじすたー",e:"💰"},{n:"こぴーき",e:"🖨️"},{n:"すきゃなー",e:"📄"},{n:"3Dすきゃなー",e:"🔍"},
-    {n:"でんきしぇーばー",e:"🪒"},{n:"はなげかったー",e:"✂️"},{n:"びがんき",e:"✨"},{n:"ひかりびようき",e:"⚡"},{n:"まっさーじちぇあ",e:"💺"},
-    {n:"ふっとまっさーじゃー",e:"🦶"},{n:"ていしゅうはちりょうき",e:"⚡"},{n:"でんきべっど",e:"🛏️"},{n:"らいとつきみらー",e:"🪞"},{n:"へああいろん",e:"💇"},
-    {n:"でんきぽっと",e:"🫖"},{n:"びーるさーばー",e:"🍺"},{n:"うぉーたーさーばー",e:"💧"},{n:"ちょこれーとふぁうんてん",e:"🍫"},{n:"わたあめましん",e:"☁️"},
-    {n:"くれーぷめーかー",e:"🍳"},{n:"あいすくりーむめーかー",e:"🍨"},{n:"よーぐるとめーかー",e:"🥛"},{n:"でんきふらいやー",e:"🍤"},{n:"すちーむくっかー",e:"💨"},
-    {n:"ほっとさんどめーかー",e:"🥪"},{n:"ふぃっしゅろーすたー",e:"🐟"},{n:"でんきぐりるなべ",e:"🍲"},{n:"ほおんじゃー",e:"🍚"},{n:"れいおんこ",e:"📦"},
-    {n:"そーだましん",e:"🥤"},{n:"すろーじゅーさー",e:"🍹"},{n:"はんどみきさー",e:"🥚"},{n:"じどうちょうりなべ",e:"🍲"},{n:"ふっとばす",e:"🦶"},
-    {n:"でんきみしん",e:"🧵"},{n:"けだまとりき",e:"👕"},{n:"くつかんそうき",e:"👟"},{n:"ちょうおんぱせんじょうき",e:"👓"},{n:"でんきどらいばー",e:"🔧"},
-    {n:"でんきさんだー",e:"🔧"},{n:"でんきじぐそー",e:"🪓"},{n:"こうあつせんじょうき",e:"🚿"},{n:"しばかりき",e:"🌱"},{n:"ぶろわー",e:"💨"},
-    {n:"でんきくさかりき",e:"🌱"},{n:"おいるひーたー",e:"🔥"},{n:"ぱねるひーたー",e:"🔥"},{n:"せらみっくふぁんひーたー",e:"🔥"},{n:"がすふぁんひーたー",e:"🔥"},
-    {n:"せきゆすとーぶ",e:"🔥"},{n:"れいふうせん",e:"💨"},{n:"すぽっとくーらー",e:"❄️"},{n:"じょしつかんそうき",e:"💨"},{n:"だつしゅうき",e:"🍃"},
-    {n:"だつしゅうはんがー",e:"👔"},{n:"あいろん",e:"💨"},{n:"いるいすちーまー",e:"💨"},{n:"はんでぃくりーなー",e:"🧹"},{n:"すてぃっくくりーなー",e:"🧹"},
-    {n:"ふとんくりーなー",e:"🛏️"},{n:"みずぶきろぼっと",e:"🤖"},{n:"まどふきろぼっと",e:"🤖"},{n:"でんどうぱとかー",e:"🚓"},{n:"せんさーらいと",e:"💡"},
-    {n:"じどうきゅうじき",e:"🍖"},{n:"じどうきゅうすいき",e:"💧"},{n:"でんききっくぼーど",e:"🛴"},{n:"しにあかー",e:"🚗"},{n:"でんきくるまいす",e:"💺"},
-    {n:"せぐうえい",e:"🛴"},{n:"ほばーぼーど",e:"🛹"},{n:"かんでんちじゅうでんき",e:"🔋"},{n:"ぽーたぶるでんげん",e:"🔋"},{n:"とうこうき",e:"💡"},
-    {n:"でんきえあぽんぷ",e:"💨"},{n:"どらいぶれこーだー",e:"📷"},{n:"かーなび",e:"🗺️"},{n:"しゃさいれいぞうこ",e:"🧊"},{n:"ちょうおんぱかしつき",e:"💧"},
-    {n:"あろまでぃふゅーざー",e:"🍃"},{n:"すまーとちぇあ",e:"💺"},{n:"でんどうのこぎり",e:"🪓"},{n:"たいようこうぱねる",e:"☀️"},{n:"でんきなべ",e:"🍲"},{n:"すまーとりんぐ",e:"💍"},
-    {n:"わいやれすじゅうでんき",e:"🔌"},{n:"でんどうねじまわし",e:"🔧"},{n:"でんしじしょ",e:"📕"},{n:"たいじゅうけい",e:"⚖️"},{n:"でんしこくばん",e:"📋"},
-    {n:"でんどうしゃったー",e:"🚪"},{n:"でんどうるーばー",e:"🪟"},{n:"じどうかんきせん",e:"💨"},{n:"でんどうぶらいんど",e:"🪟"},{n:"すまーとろっく",e:"🔑"},
-    {n:"じどうみずやりき",e:"🚿"},{n:"でんきさく",e:"⚡"},{n:"でんどうぽんぷ",e:"💨"},{n:"でんきおんしつ",e:"🏠"},{n:"じどうそーたー",e:"⚙️"},
-    {n:"でんきろ",e:"🔥"},{n:"れーざーすきゃなー",e:"🔍"},{n:"でんどうりふたー",e:"🏗️"},{n:"じどうこんべあ",e:"⛓️"},{n:"でんしはかり",e:"⚖️"},
-    {n:"でじたるのぎす",e:"📏"},{n:"でんどうぐらいんだー",e:"🔧"},{n:"でんどうぽりっしゃー",e:"🔧"},{n:"すまーとふぁん",e:"💨"}
-  ];
-
-  const modes = {
-    alphabet: [{en:"A",match:["a","えー"]},{en:"B",match:["b","びー"]}],
-    animal: [{en:"Dog",match:["dog","どっぐ"]},{en:"Cat",match:["cat","きゃっと"]}],
-    greeting: [{en:"Hello",match:["hello","はろー"]},{en:"Bye",match:["bye","ばいばい"]}],
-    food: [{en:"Apple",match:["apple","あっぷる"]},{en:"Pizza",match:["pizza","ぴざ"]}],
-    color: [{en:"Red",match:["red","れっど"]},{en:"Blue",match:["blue","ぶるー"]}],
-    number: [{en:"One",match:["one","わん"]},{en:"Two",match:["two","つー"]}]
-  };
-  
-  let currentMode = '', currentQuestion = {}, isAutoMic = false, isSpeaking = false, currentRecognition = null;
-
-  function startGame(mode) {
-    currentMode = mode;
-    document.getElementById('top-screen').style.display = 'none';
-    document.getElementById('game-screen').style.display = 'block';
-    setNextQuestion();
-  }
-
-  function setNextQuestion() {
-    let list = modes[currentMode];
-    currentQuestion = list[Math.floor(Math.random()*list.length)];
-    document.getElementById('q-word').innerText = currentQuestion.en;
-    document.getElementById('answer').value = "";
-    document.getElementById('result').innerHTML = "";
-    speakEng(currentQuestion.en, () => { if(isAutoMic) startMic(); });
-  }
-
-  function checkAnswer(val) {
-    let input = val || document.getElementById('answer').value;
-    let match = currentQuestion.match.some(m => input.toLowerCase().includes(m));
-    if (match) {
-      let idx = Math.floor(Math.random()*kadenList.length);
-      document.getElementById('result').innerHTML = `<div class="monster-anim" style="font-size:50px">${kadenList[idx].e}</div><br><strong>${kadenList[idx].n} ゲットだぜ！</strong>`;
-      speakJpn(kadenList[idx].n + "ゲットだぜ", () => setTimeout(setNextQuestion, 2000));
-    } else {
-      document.getElementById('result').innerHTML = "❌ もういっかい！";
-      speakJpn("もういちど！");
+function editDistance(a, b) {
+  const row = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    let previous = row[0];
+    row[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const saved = row[j];
+      row[j] = Math.min(
+        row[j] + 1,
+        row[j - 1] + 1,
+        previous + (a[i - 1] === b[j - 1] ? 0 : 1)
+      );
+      previous = saved;
     }
   }
+  return row[b.length];
+}
 
-  function toggleAutoMic() {
-    isAutoMic = !isAutoMic;
-    let btn = document.getElementById('btn-mic-auto');
-    btn.innerHTML = isAutoMic ? "⏹️ ストップ" : "▶️ ずっと声で";
-    btn.className = "action-btn " + (isAutoMic ? "btn-stop" : "btn-mic");
-    if(isAutoMic) startMic();
+function isLooseMatch(input, question) {
+  const spoken = normalizeAnswer(input);
+  if (!spoken) return false;
+
+  return question.match.some(alias => {
+    const target = normalizeAnswer(alias);
+    if (!target) return false;
+
+    // 1文字のアルファベットは、ほかの単語に紛れないよう完全一致だけにする
+    if (target.length === 1) return spoken === target;
+
+    // 発話の前後についた言葉、空白、記号は無視
+    if (spoken.includes(target) || target.includes(spoken)) return true;
+
+    // 長めの言葉だけ、1〜2文字ぶんの聞き取り違いを許容
+    const maxError = target.length >= 9 ? 2 : target.length >= 5 ? 1 : 0;
+    return maxError > 0 && Math.abs(spoken.length - target.length) <= maxError
+      && editDistance(spoken, target) <= maxError;
+  });
+}
+
+function startGame(mode) {
+  currentMode = mode;
+  document.getElementById("top-screen").style.display = "none";
+  document.getElementById("game-screen").style.display = "block";
+  setNextQuestion();
+}
+
+function setNextQuestion() {
+  const list = modes[currentMode];
+  currentQuestion = list[Math.floor(Math.random() * list.length)];
+  document.getElementById("q-emoji").innerText = currentQuestion.emoji || "⭐";
+  document.getElementById("q-word").innerText = currentQuestion.en;
+  document.getElementById("answer").value = "";
+  document.getElementById("result").innerHTML = "";
+
+  speak(currentQuestion.voice || currentQuestion.en, currentQuestion.lang || "en-US", () => {
+    if (isAutoMic) {
+      setTimeout(startMic, 250);
+    }
+  });
+}
+
+function checkAnswer(value) {
+  const input = value || document.getElementById("answer").value;
+  const match = isLooseMatch(input, currentQuestion);
+
+  stopMic();
+
+  if (match) {
+    const idx = Math.floor(Math.random() * kadenList.length);
+    document.getElementById("result").innerHTML =
+      `<div class="monster-anim" style="font-size:50px">${kadenList[idx].e}</div>
+       <br><strong>${kadenList[idx].n} ゲットだぜ！</strong>`;
+
+    // 正解後は、指定どおり5秒後に次の問題へ
+    speakJpn(kadenList[idx].n + " ゲットだぜ！", () => {
+      setTimeout(setNextQuestion, 5000);
+    });
+  } else {
+    document.getElementById("result").innerHTML = "❌ もういっかい！<br><span style='font-size:14px;'>ゆっくり言っても大丈夫だよ</span>";
+    speakJpn("もういちど。ゆっくりで だいじょうぶ！", () => {
+      if (isAutoMic) setTimeout(startMic, 350);
+    });
+  }
+}
+
+function toggleAutoMic() {
+  isAutoMic = !isAutoMic;
+  const btn = document.getElementById("btn-mic-auto");
+
+  btn.innerHTML = isAutoMic ? "⏹️ ストップ" : "▶️ ずっと声でこたえる";
+  btn.className = "action-btn " + (isAutoMic ? "btn-stop" : "btn-mic");
+
+  if (isAutoMic) {
+    setTimeout(startMic, 200);
+  } else {
+    stopMic();
+  }
+}
+
+function startMic() {
+  if (!isAutoMic || isSpeaking || currentRecognition) return;
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    document.getElementById("result").innerHTML =
+      "🎙️ このブラウザでは音声入力が使えません。<br><span style='font-size:14px;'>Chrome または Edge で試してね。</span>";
+    isAutoMic = false;
+    document.getElementById("btn-mic-auto").innerHTML = "▶️ ずっと声でこたえる";
+    document.getElementById("btn-mic-auto").className = "action-btn btn-mic";
+    return;
   }
 
-  function startMic() {
-    const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    rec.lang = 'ja-JP';
-    rec.start();
-    rec.onresult = (e) => checkAnswer(e.results[0][0].transcript);
-  }
+  const recognition = new SpeechRecognition();
+  currentRecognition = recognition;
 
-  function speakEng(t, cb) { 
-    let s = new SpeechSynthesisUtterance(t); s.lang='en-US'; s.onend=cb; window.speechSynthesis.speak(s); 
-  }
-  function speakJpn(t, cb) { 
-    let s = new SpeechSynthesisUtterance(t); s.lang='ja-JP'; s.onend=cb; window.speechSynthesis.speak(s); 
-  }
+  // 日本語設定で、カタカナ発音・日本語回答を拾いやすくする
+  recognition.lang = "ja-JP";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 5;
 
-  function goBackToTop() { location.reload(); }
-  function showZukan() { /* 図鑑表示ロジック */ }
-</script>
-</body>
-</html>
+  let resultHandled = false;
+
+  recognition.onresult = event => {
+    const candidates = Array.from(event.results[0])
+      .map(item => item.transcript)
+      .filter(Boolean);
+
+    // 複数候補の中に正解に近いものがあれば、それを最優先
+    const matched = candidates.find(candidate => isLooseMatch(candidate, currentQuestion));
+    resultHandled = true;
+    checkAnswer(matched || candidates[0] || "");
+  };
+
+  recognition.onerror = event => {
+    if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+      document.getElementById("result").innerHTML =
+        "🎙️ マイクの許可が必要です。ブラウザの設定でマイクをオンにしてね。";
+      isAutoMic = false;
+      document.getElementById("btn-mic-auto").innerHTML = "▶️ ずっと声でこたえる";
+      document.getElementById("btn-mic-auto").className = "action-btn btn-mic";
+    }
+  };
+
+  recognition.onend = () => {
+    if (currentRecognition === recognition) currentRecognition = null;
+
+    // 無音・聞き取り失敗時だけ、同じ問題でもう一度聞く
+    if (isAutoMic && !isSpeaking && !resultHandled) {
+      setTimeout(startMic, 450);
+    }
+  };
+
+  try {
+    recognition.start();
+  } catch (error) {
+    currentRecognition = null;
+  }
+}
+
+function stopMic() {
+  if (currentRecognition) {
+    const recognition = currentRecognition;
+    currentRecognition = null;
+    try {
+      recognition.stop();
+    } catch (error) {
+      // すでに停止済みなら何もしない
+    }
+  }
+}
+
+function speak(text, lang, callback) {
+  window.speechSynthesis.cancel();
+  isSpeaking = true;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = lang;
+  utterance.rate = 0.82; // 子どもが聞き取りやすい、少しゆっくりした速さ
+
+  utterance.onend = () => {
+    isSpeaking = false;
+    if (callback) callback();
+  };
+  utterance.onerror = () => {
+    isSpeaking = false;
+    if (callback) callback();
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function speakEng(text, callback) {
+  speak(text, "en-US", callback);
+}
+
+function speakJpn(text, callback) {
+  speak(text, "ja-JP", callback);
+}
+
+function goBackToTop() {
+  stopMic();
+  window.speechSynthesis.cancel();
+  location.reload();
+}
+
+function showZukan() {
+  /* 図鑑表示ロジック */
+}
+</script> </body> </html>
